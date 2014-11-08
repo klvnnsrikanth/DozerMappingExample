@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <mapping>
+        <class-a>domain.entity.AddressEntity</class-a>
+        <class-b bean-factory="org.dozer.factory.JAXBBeanFactory">
+            com.rackspace.customer.Address
+        </class-b>
+
+        <field>
+            <a get-method="isPrimary">isPrimary</a>
+            <b set-method="setPrimary">primary</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>domain.entity.EmailAddressEntity</class-a>
+        <class-b bean-factory="org.dozer.factory.JAXBBeanFactory">
+            com.rackspace.customer.EmailAddress
+        </class-b>
+
+        <field>
+            <a get-method="isPrimary">isPrimary</a>
+            <b set-method="setPrimary">primary</b>
+        </field>
+        
+        <field>
+            <a>invalid</a>
+            <b>otherAttributes</b>
+            <b-hint>java.util.HashMap</b-hint>
+        </field>
+
+        <field>
+            <a>comment</a>
+            <b>otherAttributes</b>
+            <b-hint>java.util.HashMap</b-hint>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>domain.entity.PhoneEntity</class-a>
+        <class-b bean-factory="org.dozer.factory.JAXBBeanFactory">
+            com.rackspace.customer.PhoneNumber</class-b>
+
+        <field>
+            <a>invalid</a>
+            <b>otherAttributes</b>
+            <b-hint>java.util.HashMap</b-hint>
+        </field>
+
+        <field>
+            <a>comment</a>
+            <b>otherAttributes</b>
+            <b-hint>java.util.HashMap</b-hint>
+        </field>
+
+        <field>
+            <a>phoneType.name</a>
+            <b>otherAttributes</b>
+            <a-hint>domain.entity.PhoneTypeEntity</a-hint>
+            <b-hint>java.util.HashMap</b-hint>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>domain.entity.PersonEntity</class-a>
+        <class-b bean-factory="org.dozer.factory.JAXBBeanFactory">
+            com.rackspace.customer.Contact</class-b>
+
+        <field>
+            <a>userId</a>
+            <b>username</b>
+        </field>
+
+        <field custom-converter="domain.converter.PersonNumberAdapter">
+            <a>personNumber</a>
+            <b>contactNumber</b>
+        </field>
+
+        <field>
+            <a>addresses</a>
+            <b is-accessible="true">addresses.address</b>
+            <a-hint>domain.entity.AddressEntity</a-hint>
+            <b-hint>com.rackspace.customer.Address</b-hint>
+        </field>
+
+        <field>
+            <a>phones</a>
+            <b is-accessible="true">phoneNumbers.phoneNumber</b>
+            <a-hint>domain.entity.PhoneEntity</a-hint>
+            <b-hint>com.rackspace.customer.PhoneNumber</b-hint>
+        </field>
+
+        <field>
+            <a>emailAddresses</a>
+            <b is-accessible="true">emailAddresses.emailAddress</b>
+            <a-hint>domain.entity.EmailAddressEntity</a-hint>
+            <b-hint>com.rackspace.customer.EmailAddress</b-hint>
+        </field>
+    </mapping>
+</mappings>

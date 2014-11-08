@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="schema.xsl"?>
+
+<!-- (C) 2011 Rackspace Hosting, All Rights Reserved -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    version="1.0" elementFormDefault="qualified"
+    attributeFormDefault="qualified" targetNamespace="http://customer.api.rackspace.com/v1">
+    
+
+    <xsd:complexType name="List">
+        <xsd:attribute name="total" type="xsd:int" />
+        <xsd:attribute name="limit" type="xsd:int" />
+        <xsd:attribute name="offset" type="xsd:int" />
+    </xsd:complexType>
+</schema>

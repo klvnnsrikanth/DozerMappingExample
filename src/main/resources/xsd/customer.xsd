@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="schema.xsl"?>
+
+<!-- (C) 2011 Rackspace Hosting, All Rights Reserved -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:customer="http://customer.api.rackspace.com/v1"
+    elementFormDefault="qualified" attributeFormDefault="unqualified"
+    targetNamespace="http://customer.api.rackspace.com/v1">
+        
+    <include schemaLocation="common.xsd" />
+    
+    <xsd:element name="customer" type="customer:Customer" />
+    <xsd:element name="customers" type="customer:Customers" />
+    <xsd:element name="customerAccount" type="customer:CustomerAccount" />
+    <xsd:element name="customerAccounts" type="customer:CustomerAccounts" />
+    <xsd:element name="contact" type="customer:Contact" />
+    <xsd:element name="contacts" type="customer:Contacts" />
+    <xsd:element name="customerAccountStatusChanges" type="customer:CustomerAccountStatusChangeList" /> 
+    <xsd:element name="country" type="customer:Country" />
+    <xsd:element name="countries" type="customer:Countries" />
+    <xsd:element name="accountStatuses" type="customer:AccountStatuses"/>
+    
+    <xsd:complexType name="Customer">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    A Customer of Rackspace. 
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="parentCustomer" type="customer:Customer" minOccurs="0"/>
+            <xsd:element name="childCustomers" type="customer:Customers" minOccurs="0" />
+            <xsd:element ref="customer:customerAccounts" minOccurs="0" />
+            <xsd:element ref="customer:contacts" minOccurs="0"/>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="number" type="customer:CustomerNumber"/>
+        <xsd:attribute name="customerType" type="customer:CustomerType"/>
+        <xsd:attribute name="createdDate" type="xsd:dateTime" />
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Customers">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element ref="customer:customer" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>	 
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CustomerAccount">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    A customer account represents a slice of a customer's portfolio across Rackspace. 
+                    This slice contains product, contact, billing, identity and support management
+                    and configuration.
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element ref="customer:contacts" minOccurs="0" maxOccurs="1"/>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+
+        <xsd:attribute name="number" type="xsd:long" use="required">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Represents the ID of an account.</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="parentAccountNumber" type="xsd:long">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Represents the ID of the parent account.  The parent account must already be 
+                    defined in the customer service, and must be of the same type as the child 
+                    account defined here.</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="customer:Max255String" use="required">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Represents the name of an account.</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="type" type="customer:CustomerAccountType" use="required">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Represents the type of an account.</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute >
+        <xsd:attribute name="status" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Represents the status of an account.</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="rcn" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Rackspace Customer Number represents a unique identifier for a customer across the enterprise.</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="createdDate" type="xsd:dateTime" >
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Rackspace Customer Account created date on the source</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CustomerAccounts">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element ref="customer:customerAccount" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>	 
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Contacts">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element ref="customer:contact" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>	 
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Contact">
+    	<xsd:annotation>
+    		<xsd:documentation xml:lang="EN"
+    			xmlns="http://www.w3.org/1999/xhtml">
+    			<p>
+    				A Contact is someone who is associated with a
+    				customer. As the name implies, they are a point of
+    				contact between Rackspace and the customer they
+    				belong to.
+    			</p>
+    		</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:sequence>
+    		<xsd:element name="addresses" type="customer:AddressList" minOccurs="1" />
+    		<xsd:element name="emailAddresses" type="customer:EmailAddressList" minOccurs="1" />
+    		<xsd:element name="phoneNumbers" type="customer:PhoneNumberList" minOccurs="1" />
+    		<xsd:element name="roles" type="customer:RoleList" minOccurs="1" />
+    	    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+    	</xsd:sequence>
+    	<xsd:attribute name="firstName" type="customer:Max32String" use="required" />
+    	<xsd:attribute name="lastName" type="customer:Max32String" use="required" />
+    	<xsd:attribute name="suffix" type="customer:Min0Max21String"/>
+        <xsd:attribute name="contactNumber" type="xsd:string" />
+    	<xsd:attribute name="title" type="customer:Min0Max100String"/>
+        <xsd:attribute name="rcn" type="xsd:string"/>
+        <xsd:attribute name="username" type="customer:Min0Max50String" />
+        <xsd:attribute name="legacyNumber" type="xsd:string"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="AddressList">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element name="address" type="customer:Address" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Address">
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="primary" type="xsd:boolean" default="true"/>
+        <xsd:attribute name="street" type="customer:Max100String" use="required"/>
+        <xsd:attribute name="city" type="customer:Max60String" use="required"/>
+        <xsd:attribute name="state" type="customer:Max60String"/>
+        <xsd:attribute name="country" type="customer:Max2String" use="required"/>
+        <xsd:attribute name="zipcode" type="customer:Max20String"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="EmailAddressList">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element name="emailAddress" type="customer:EmailAddress" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="EmailAddress">
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="primary" type="xsd:boolean" default="true"/>
+        <xsd:attribute name="address" type="customer:EmailAddressString" use="required"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PhoneNumberList">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element name="phoneNumber" type="customer:PhoneNumber" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PhoneNumber">
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="number" type="customer:Max32String" use="required"/>
+        <xsd:attribute name="mask" type="customer:Max33String">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>
+                        A phone mask contains pound signs ,'#', to be replaced by
+                        digits. Pound signs should be replaced with digits from the
+                        value of this element from left to right until no digits remain.
+                        Any pound signs that are left-over should be removed. In the
+                        event that more digits exist than pound signs, those digits
+                        should be truncated. Non-pound sign characters should not be
+                        replaced.
+                    </p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="country" type="customer:Max2String"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CustomerAccountStatusChangeList">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element name="statusChange" type="customer:CustomerAccountStatusChange" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CustomerAccountStatusChange">
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="status" type="xsd:string"/>
+        <xsd:attribute name="date" type="xsd:dateTime"/>
+        <xsd:attribute name="userName" type="xsd:string"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Countries">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    A list of Countries.
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <element name="country" type="customer:Country" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Country">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    A country of Earth.
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <element name="states" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <element name="state" type="customer:State" minOccurs="0" maxOccurs="100"/>
+                        <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                    </xsd:sequence>
+                </xsd:complexType>
+            </element>
+        </xsd:sequence>
+        <xsd:attribute name="code" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="phonemask" type="xsd:string"/>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="State">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    A state, province, prefecture, region, or federal district of a
+                    country.
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                    <p>Indicates if state is province, region, state, ...</p>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CustomerAccountRole">
+        <xsd:simpleContent>
+            <xsd:extension base="customer:ContactRole" >
+                <xsd:attribute name="customerAccountNumber" type="customer:Max10String"/>
+                <xsd:attribute name="customerAccountType" type="customer:CustomerAccountType" />
+                <xsd:attribute name="rcn" type="xsd:string"/>
+                <xsd:attribute name="customerType" type="customer:CustomerType" use="optional"/>
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="RoleList">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element name="role" type="customer:ContactRole" maxOccurs="unbounded" />
+                <xsd:element name="customerAccountRole" type="customer:CustomerAccountRole" maxOccurs="unbounded" />
+            </xsd:choice>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="EmailAddressString">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:pattern value="[^@]+@[^\.]+\..+"/>
+            <xsd:maxLength value="255"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="AccountStatuses">
+        <xsd:complexContent>
+            <xsd:extension base="customer:List" >
+                <xsd:sequence>
+                    <xsd:element name="status" type="customer:AccountStatus" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>  
+                <xsd:anyAttribute namespace="##other" processContents="lax"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+     <xsd:complexType name="AccountStatus">
+        <xsd:attribute name="type" type="customer:CustomerAccountType" />
+        <xsd:attribute name="status" type="xsd:string"/>
+     </xsd:complexType>
+
+    <xsd:simpleType name="CustomerAccountType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    The list of possible Account types that be used to describe an account
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="MANAGED_HOSTING"/>
+            <xsd:enumeration value="CLOUD"/>
+            <xsd:enumeration value="EMAIL_AND_APPS"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    
+    <xsd:simpleType name="ContactRole">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="PRIMARY"/>
+            <xsd:enumeration value="BILLING"/>
+            <xsd:enumeration value="TECHNICAL"/>
+            <xsd:enumeration value="ADMINISTRATIVE"/>
+            <xsd:enumeration value="ABUSE"/>
+            <xsd:enumeration value="PURCHASER"/>
+            <xsd:enumeration value="REVIEWER"/>
+            <xsd:enumeration value="OTHER"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="NonEmptyString">
+        <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="collapse"/>
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max10String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="32"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max32String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="32"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max33String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="33"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max50String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="50"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Min0Max21String">
+        <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="collapse"/>
+            <xsd:minLength value="0"/>
+            <xsd:maxLength value="21"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="Min0Max50String">
+        <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="collapse"/>
+            <xsd:minLength value="0"/>
+            <xsd:maxLength value="50"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Min0Max100String">
+        <xsd:restriction base="xsd:string">
+            <xsd:whiteSpace value="collapse"/>
+            <xsd:minLength value="0"/>
+            <xsd:maxLength value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="Max255String">                                    
+         <xsd:restriction base="customer:NonEmptyString">                                     
+             <xsd:maxLength value="255"/>                                        
+         </xsd:restriction>                                                      
+    </xsd:simpleType> 
+   
+    <xsd:simpleType name="Max100String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max60String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="60"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max20String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="20"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Max2String">
+        <xsd:restriction base="customer:NonEmptyString">
+            <xsd:maxLength value="2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="CustomerType">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="EN" xmlns="http://www.w3.org/1999/xhtml">
+                <p>
+                    The list of possible customer types.
+                </p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ORGANIZATION"/>
+            <xsd:enumeration value="RESELLER"/>
+            <xsd:enumeration value="PARTNER"/>
+            <xsd:enumeration value="CONTRACTOR"/>
+            <xsd:enumeration value="DIVISION"/>
+            <xsd:enumeration value="END_USER"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="CustomerNumber">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="RCN(-(\d){3}){3}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</schema>
